@@ -1,6 +1,6 @@
 FROM maven:3.6.3-jdk-8
 
-EXPOSE 8080
+EXPOSE 8090
 WORKDIR /app
 COPY pom.xml .
 COPY src src
