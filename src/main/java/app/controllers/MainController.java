@@ -1,6 +1,8 @@
 package app.controllers;
 
+import app.model.OrgUserModel;
 import app.service.requerst.RestServiceRequest;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,11 +18,23 @@ public class MainController {
     private RestServiceRequest restServiceRequest;
 
     @RequestMapping(value = "/get", method = RequestMethod.GET,  produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
-    public ResponseEntity<String> get() {
-
+    @ApiOperation(value = "Получить имя вызванного сервиса", consumes = "Имя вызванного сервиса")
+    public ResponseEntity<String> getServiceName() {
         String response = restServiceRequest.getName(String.class);
+        if(!response.contains("Production")){
+            response="Mock Service";
+        }
+        return new ResponseEntity<>("Вызван метод сервиса '"+response+"'\n", HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>("Вызван метод сервиса '"+response+"'", HttpStatus.OK);
+
+
+    @RequestMapping(value = "/get_user", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
+    @ApiOperation(value = "Получения пользователя организации")
+    public ResponseEntity<OrgUserModel> getUser() {
+        OrgUserModel orgUserModel = restServiceRequest.getUser(OrgUserModel.class);
+
+        return new ResponseEntity<OrgUserModel>(orgUserModel, HttpStatus.OK);
     }
 
 

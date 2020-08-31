@@ -34,13 +34,7 @@ public class RestServiceRequest {
     @SuppressWarnings("unchecked")
     public <T> T getName(Class tClass) {
         try {
-            String url;
-            if(!(System.getenv("service.url")==null)){
-                url = System.getenv("service.url")+ "/get_name";
-            }else{
-               url = env.getProperty("service.url") + "/get_name";
-            }
-
+            String url = getServiceUrl() +"/get_name";
             logger.info("Получение данных из сервиса по url:"+url);
             return ((T)this.restTemplate.getForObject(url, tClass));
         } catch (HttpClientErrorException e) {
@@ -49,6 +43,26 @@ public class RestServiceRequest {
         }
     }
 
+
+    public <T> T getUser(Class<T> tClass) {
+        try {
+            String url = getServiceUrl() +"/get_user";
+
+            logger.info("Получение данных о пользователе:"+url);
+            return this.restTemplate.getForObject(url, tClass);
+        } catch (HttpClientErrorException e) {
+
+            throw new RuntimeException(e.getResponseBodyAsString());
+        }
+    }
+
+
+    private String getServiceUrl(){
+        if(!(System.getenv("service_url")==null)) {
+            return System.getenv("service_url") ;
+        }
+            return  env.getProperty("service_url");
+    }
 
 
 }
