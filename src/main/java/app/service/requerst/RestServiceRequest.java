@@ -34,7 +34,13 @@ public class RestServiceRequest {
     @SuppressWarnings("unchecked")
     public <T> T getName(Class tClass) {
         try {
-            String url = env.getProperty(System.getenv("service.url"),env.getProperty("service.url") )+ "/get_name";
+            String url;
+            if(!(System.getenv("service.url")==null)){
+                url = System.getenv("service.url")+ "/get_name";
+            }else{
+               url = env.getProperty("service.url") + "/get_name";
+            }
+
             logger.info("Получение данных из сервиса по url:"+url);
             return ((T)this.restTemplate.getForObject(url, tClass));
         } catch (HttpClientErrorException e) {
